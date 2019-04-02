@@ -27598,7 +27598,7 @@ local PathNodes = {
 		[704] = {"Closed", 2641.8, -401.6, 56.5, false}, 
 		[705] = {"Closed", 2651.7, -405.2, 55, false}, 
 		[706] = {"Closed", 2661.1, -409.2, 54.1, false}, 
-		[707] = {"Closed", 2675.1, -415.7, 53.1, false}, 
+		[707] = {"Closed", 2675.1, -415.7, 53.1, false, {{"North Rock", 1236}}}, 
 		[708] = {"Closed", 2683.5, -419.5, 52.6, false}, 
 		[709] = {"Closed", 2694.2, -427.7, 52.1, false}, 
 		[710] = {"Closed", 2701.6, -435.4, 52, false}, 
@@ -27617,7 +27617,7 @@ local PathNodes = {
 		[723] = {"Closed", 2748.1, -562, 49.7, false}, 
 		[724] = {"Closed", 2749.7, -572.3, 50.6, false}, 
 		[725] = {"Closed", 2752.5, -586.2, 52, false}, 
-		[726] = {"Closed", 2758.1, -609.6, 55.4, false}, 
+		[726] = {"Closed", 2758.1, -609.6, 55.4, false, {{"North Rock", 1217}}}, 
 		[727] = {"Closed", 2759.9, -619.8, 57, false}, 
 		[728] = {"Closed", 2761, -630.2, 58.8, false}, 
 		[729] = {"Closed", 2761.2, -640.2, 60.6, false}, 
@@ -27698,6 +27698,51 @@ local PathNodes = {
 		[1105] = {"Closed", 2304.3, -293.6, 44.1, false}, 
 		[1106] = {"Closed", 2295.1, -298.2, 43.9, false}, 
 		[1107] = {"Closed", 2286.4, -303.4, 43.8, false, {{"Red County", 12200}}}, 
+		
+		[1200] = {"Closed", 2759.1, -764.9, 49, false}, 
+		[1201] = {"Closed", 2759.8, -754.6, 51.6, false}, 
+		[1202] = {"Closed", 2760.6, -744.7, 54, false}, 
+		[1203] = {"Closed", 2761.5, -734.8, 56.5, false}, 
+		[1204] = {"Closed", 2763.2, -725.2, 58.8, false}, 
+		[1205] = {"Closed", 2764.9, -715, 60.8, false}, 
+		[1206] = {"Closed", 2765.8, -704.7, 62.2, false}, 
+		[1207] = {"Closed", 2766.5, -694.8, 62.9, false}, 
+		[1208] = {"Closed", 2766.8, -684.8, 63.6, false}, 
+		[1209] = {"Closed", 2766.7, -674.4, 63.5, false}, 
+		[1210] = {"Closed", 2766.5, -664.1, 63.1, false}, 
+		[1211] = {"Closed", 2766.3, -653.8, 62.1, false}, 
+		[1212] = {"Closed", 2766.1, -643.4, 60.9, false}, 
+		[1213] = {"Closed", 2765.8, -633.2, 59.3, false}, 
+		[1214] = {"Closed", 2765.5, -623.3, 57.5, false}, 
+		[1215] = {"Closed", 2764.7, -613, 56, false}, 
+		[1216] = {"Closed", 2762.7, -603.1, 54.5, false}, 
+		[1217] = {"Closed", 2760.4, -592.9, 53, false, {{"North Rock", 725}}}, 
+		[1218] = {"Closed", 2758.1, -582.7, 51.6, false}, 
+		[1219] = {"Closed", 2756.2, -572, 50.7, false}, 
+		[1220] = {"Closed", 2754, -561.4, 49.8, false}, 
+		[1221] = {"Closed", 2751.6, -551.2, 49, false}, 
+		[1222] = {"Closed", 2749.1, -540.7, 48.3, false}, 
+		[1223] = {"Closed", 2746.6, -530.3, 48.3, false}, 
+		[1224] = {"Closed", 2744.1, -519.6, 48.4, false}, 
+		[1225] = {"Closed", 2741.7, -509.5, 49.2, false}, 
+		[1226] = {"Closed", 2739.1, -499.6, 49.8, false}, 
+		[1227] = {"Closed", 2736.1, -489.8, 50.3, false}, 
+		[1228] = {"Closed", 2732.8, -479.8, 50.7, false}, 
+		[1229] = {"Closed", 2729, -469.2, 51.2, false}, 
+		[1230] = {"Closed", 2724, -459.9, 51.9, false}, 
+		[1231] = {"Closed", 2719.3, -451, 52.4, false}, 
+		[1232] = {"Closed", 2713.9, -442, 52.2, false}, 
+		[1233] = {"Closed", 2707.7, -434, 52, false}, 
+		[1234] = {"Closed", 2700.8, -425.9, 52.1, false}, 
+		[1235] = {"Closed", 2693.2, -419, 52.3, false}, 
+		[1236] = {"Closed", 2680.7, -411.7, 52.9, false}, 
+		[1237] = {"Closed", 2674.3, -408.5, 53.1, false, {{"North Rock", 707}}}, 
+		[1238] = {"Closed", 2659.1, -401.3, 54.3, false}, 
+		[1239] = {"Closed", 2649.5, -397.4, 55.7, false}, 
+		[1240] = {"Closed", 2639.7, -393.9, 57.3, false}, 
+		[1241] = {"Closed", 2630.2, -390.5, 58.9, false}, 
+		[1242] = {"Closed", 2620.7, -387.7, 61.1, false}, 
+		[1243] = {"Closed", 2611.2, -385.1, 63.2, false, {{"North Rock", 630}}}, 
 	},   
 	["Julius Thruway South"] = {
 		[1] = {true, 1803.5, 831.4, 9.7, false, {{"Julius Thruway South", 1331}}}, 
@@ -50323,11 +50368,11 @@ local PathNodes = {
 		[1416] = {true, 2668.8, -1045.5, 68.4, false}, 
 		[1417] = {true, 2657.9, -1045.5, 68.4, false}, 
 		[1418] = {true, 2647.9, -1045.5, 68.4, false}, 
-		[1419] = {true, 2642.5, -1045.5, 68.4, false, {{"Las Colinas", 1568}}},
+		[1419] = {true, 2642.5, -1045.5, 68.4, false, {{"Las Colinas", 1567}}},
 		[1420] = {true, 2627.5, -1045.5, 68.4, false}, 
 		[1421] = {true, 2617.5, -1045.5, 68.4, false}, 
 		[1422] = {true, 2602.3, -1045.5, 68.4, false, {{"Las Colinas", 2700}}}, 
-		[1423] = {true, 2598.8, -1045.5, 68.4, false}, 
+		[1423] = {true, 2598.8, -1045.5, 68.4, false, {{"Las Colinas", 3000}}},
 		[1424] = {true, 2584.8, -1045.5, 68.4, false}, 
 		[1425] = {true, 2574.6, -1045.5, 68.4, false}, 
 		[1426] = {true, 2563, -1045.5, 68.4, false, {{"Las Colinas", 1560}}},
@@ -50455,13 +50500,12 @@ local PathNodes = {
 		[1560] = {true, 2560.7, -1050.4, 68.4, false, {{"Las Colinas", 2100}}}, 
 		[1561] = {true, 2565.8, -1050.4, 68.5, false, {{"Las Colinas", 1426}}},
 		[1562] = {true, 2576.9, -1050.2, 68.5, false}, 
-		[1563] = {true, 2587.9, -1050.1, 68.4, false}, 
-		[1564] = {true, 2598.5, -1050.4, 68.4, false}, 
-		[1565] = {true, 2608.6, -1050.3, 68.4, false}, 
-		[1566] = {true, 2618.6, -1050.3, 68.4, false}, 
-		[1567] = {true, 2629.1, -1050.4, 68.4, false}, 
-		[1568] = {true, 2639.9, -1050.6, 68.4, false, {{"Las Colinas", 409}, {"Las Colinas", 1600}}}, 
-		
+		[1563] = {true, 2587.9, -1050.1, 68.4, false, {{"Las Colinas", 3000}}},
+		[1564] = {true, 2608.6, -1050.3, 68.4, false}, 
+		[1565] = {true, 2618.6, -1050.3, 68.4, false}, 
+		[1566] = {true, 2629.1, -1050.4, 68.4, false}, 
+		[1567] = {true, 2639.9, -1050.6, 68.4, false, {{"Las Colinas", 409}, {"Las Colinas", 1600}}}, 
+		 
 		[1600] = {true, 2640.2, -1059, 68.4, false}, 
 		[1601] = {true, 2640.2, -1072.2, 68.5, false, {{"Las Colinas", 406}}},
 		[1602] = {true, 2640.1, -1079.7, 68.5, false}, 
@@ -50662,7 +50706,7 @@ local PathNodes = {
 		[2707] = {"Closed", 2572.5, -982.3, 80.1, false}, 
 		[2708] = {"Closed", 2565, -978, 80.7, false}, 
 		[2709] = {"Closed", 2554.4, -973.2, 81.2, false}, 
-		[2710] = {"Closed", 2547.6, -970.3, 81.2, false, {{"Las Colinas", 2508}}}, 
+		[2710] = {"Closed", 2547.6, -970.3, 81.2, false, {{"Las Colinas", 2508}, {"Las Colinas", 3100}}}, 
 		
 		[2800] = {"Closed", 2285.8, -1058.1, 47.4, false}, 
 		[2801] = {"Closed", 2287.6, -1054.2, 48.2, false}, 
@@ -50698,7 +50742,28 @@ local PathNodes = {
 		[2831] = {"Closed", 2505.2, -972.5, 81.2, false}, 
 		[2832] = {"Closed", 2515.4, -972.5, 81, false}, 
 		[2833] = {"Closed", 2525.6, -972.4, 80.9, false}, 
-		[2834] = {"Closed", 2541.4, -971.3, 81, false, {{"Las Colinas", 2710}}}, 
+		[2834] = {"Closed", 2541.4, -971.3, 81, false, {{"Las Colinas", 2710}, {"Las Colinas", 2900}}}, 
+		
+		[2900] = {"Closed", 2552.4, -975.7, 80.9, false}, 
+		[2901] = {"Closed", 2562.1, -979.7, 80.6, false}, 
+		[2902] = {"Closed", 2571.3, -984.7, 79.9, false}, 
+		[2903] = {"Closed", 2580.1, -990, 78.9, false}, 
+		[2904] = {"Closed", 2588.2, -996.2, 77.4, false}, 
+		[2905] = {"Closed", 2593.7, -1004.4, 75.4, false}, 
+		[2906] = {"Closed", 2596.5, -1014.3, 73.1, false}, 
+		[2907] = {"Closed", 2598.1, -1024.1, 71, false}, 
+		[2908] = {"Closed", 2598.5, -1034.5, 69.2, false, {{"Las Colinas", 1423}}}, 
+		
+		[3000] = {"Closed", 2601.2, -1050.2, 68.4, false, {{"Las Colinas", 1564}, {"Las Colinas", 1422}}}, 
+		
+		[3100] = {"Closed", 2560.3, -968.5, 81.7, false}, 
+		[3101] = {"Closed", 2570.6, -966.4, 81.1, false}, 
+		[3102] = {"Closed", 2580.4, -964, 80.4, false}, 
+		[3103] = {"Closed", 2590.2, -961.5, 80.4, false}, 
+		[3104] = {"Closed", 2599.9, -959, 80, false}, 
+		[3105] = {"Closed", 2610, -956, 79.3, false}, 
+		[3106] = {"Closed", 2619.8, -952.1, 78.7, false}, 
+		[3107] = {"Closed", 2629.2, -947.6, 78.2, false, {{"Los Santos", 4000}}}, 
 	}, 
 	["Verdant Meadows"] = {
 		[1] = {true, 431.8, 2382, 25.4, false}, 
@@ -52553,14 +52618,39 @@ local PathNodes = {
 		[3912] = {"Closed", 2720, -893.2, 51.5, false}, 
 		[3913] = {"Closed", 2712.2, -898.6, 55.2, false}, 
 		[3914] = {"Closed", 2704.3, -903.7, 58.9, false}, 
-		[3915] = {"Closed", 2699.2, -906.9, 61, false}, 
+		[3915] = {"Closed", 2699.2, -906.9, 61, false, {{"Los Santos", 4006}}}, 
 		[3916] = {"Closed", 2685.1, -914.8, 66.6, false}, 
 		[3917] = {"Closed", 2675.8, -919.6, 69.8, false}, 
 		[3918] = {"Closed", 2666.2, -922.9, 72.3, false}, 
 		[3919] = {"Closed", 2656.2, -925.9, 74.5, false}, 
-		[3920] = {"Closed", 2646.4, -931.3, 76, false}, 
+		[3920] = {"Closed", 2646.4, -931.3, 76, false, {{"Los Santos", 4002}}}, 
 		[3921] = {"Closed", 2637.5, -937.5, 77.3, false}, 
 		[3922] = {"Closed", 2628.4, -943, 78.1, false, {{"Las Colinas", 2500}}}, 
+		
+		[4000] = {"Closed", 2638.1, -942.4, 77.7, false}, 
+		[4001] = {"Closed", 2647.1, -937.1, 76.6, false}, 
+		[4002] = {"Closed", 2656.2, -932.1, 75.3, false, {{"Los Santos", 3919}}}, 
+		[4003] = {"Closed", 2665.6, -929.7, 72.9, false}, 
+		[4004] = {"Closed", 2675.1, -925.8, 70.2, false}, 
+		[4005] = {"Closed", 2684.1, -921.5, 67.3, false}, 
+		[4006] = {"Closed", 2695.5, -915.3, 63, false}, 
+		[4007] = {"Closed", 2700.6, -912.4, 61.2, false, {{"Los Santos", 3915}}}, 
+		[4008] = {"Closed", 2711, -906.4, 56.7, false}, 
+		[4009] = {"Closed", 2719.1, -901.1, 52.9, false}, 
+		[4010] = {"Closed", 2726.5, -895.3, 49.5, false}, 
+		[4011] = {"Closed", 2734.2, -888.3, 46.6, false}, 
+		[4012] = {"Closed", 2741.3, -880.9, 44, false}, 
+		[4013] = {"Closed", 2747.5, -873.1, 41.7, false}, 
+		[4014] = {"Closed", 2753.1, -864.4, 40.3, false}, 
+		[4015] = {"Closed", 2756.7, -855.1, 39, false}, 
+		[4016] = {"Closed", 2760, -845.3, 38.1, false}, 
+		[4017] = {"Closed", 2762.1, -835.5, 38.4, false}, 
+		[4018] = {"Closed", 2762.4, -825.4, 39.1, false}, 
+		[4019] = {"Closed", 2762.2, -815.3, 40.4, false}, 
+		[4020] = {"Closed", 2761.7, -805.3, 41.7, false}, 
+		[4021] = {"Closed", 2761.3, -795.1, 43.1, false}, 
+		[4022] = {"Closed", 2760.7, -785.1, 44.5, false}, 
+		[4023] = {"Closed", 2759.4, -774.9, 46.9, false, {{"North Rock", 1200}}}, 
 	}, 
 	["Green Palms"] = {
 		[1] = {true, 337.1, 1380.4, 6.2, false}, 
@@ -55227,11 +55317,41 @@ end
 
 
 
-function CreateVehicleNodeMarker(zone, last)
-	if(PathNodes[zone]) then
-		triggerClientEvent(source, "InfoPath", source, zone, toJSON(PathNodes[zone]), last)
-	else
-		triggerClientEvent(source, "InfoPath", source, zone, nil, last)
+
+function getInfoPathList(thePlayer, city)
+	if(city == "San Andreas") then
+		local List = {}
+		for i, _ in pairs(PathNodes) do
+			List[i] = false
+		end
+		triggerClientEvent(source, "InfoPathLoading", source, city, List)
+	elseif(city == "Liberty City") then
+		local List = {}
+		for i, _ in pairs(PathNodesLC) do
+			List[i] = false
+		end
+		triggerClientEvent(source, "InfoPathLoading", source, city, List)
+	end
+end
+addEvent("getInfoPathList", true)
+addEventHandler("getInfoPathList", root, getInfoPathList)
+
+
+
+
+function CreateVehicleNodeMarker(city, zone, last)
+	if(city == "San Andreas") then
+		if(PathNodes[zone]) then
+			triggerClientEvent(source, "InfoPath", source, city, zone, toJSON(PathNodes[zone]), last)
+		else
+			triggerClientEvent(source, "InfoPath", source, city, zone, nil, last)
+		end
+	elseif(city == "Liberty City") then
+		if(PathNodesLC[zone]) then
+			triggerClientEvent(source, "InfoPath", source, city, zone, toJSON(PathNodesLC[zone]), last)
+		else
+			triggerClientEvent(source, "InfoPath", source, city, zone, nil, last)
+		end
 	end
 end
 addEvent("CreateVehicleNodeMarker", true)
@@ -55368,6 +55488,11 @@ function GetVehicleNodes()
 	return PathNodes
 end
 		
+
+function GetVehicleNodesLC()
+	return PathNodesLC
+end
+
 
 function GetCoordsByGPS(arr)
 	local out = {}
