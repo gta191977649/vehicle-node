@@ -1,5 +1,5 @@
 -- Транспорт, x,y,z, светофор [north[0], west[3]], узлы
-local PathNodes = {
+local PathNodes = {["San Andreas"] = {
 	["San Fierro"] = {
 		[1] = {true, -1769.3, -1102.5, 53.8, false}, 
 		[2] = {true, -1777.5, -1082, 53.4, false}, 
@@ -55241,11 +55241,11 @@ local PathNodes = {
 		
 		[4600] = {true, 1819.2, -1490.7, 5, false, {{"Commerce", 3700}}}, 
 	}, 
-}
+}}
 
+PathNodes["Liberty City"] = PathNodesLC
 
-
-for name, dat in pairs(PathNodes) do
+for name, dat in pairs(PathNodes["San Andreas"]) do
 	for i, arr in pairs(dat) do
 			--local m = createMarker(arr[2],arr[3],arr[4], "cylinder", 1.5, 85, 87, 152, 120)
 			--createBlip(arr[2],arr[3],arr[4], 0, 1, 0,255,255,255)
@@ -55277,19 +55277,11 @@ end
 
 
 function getInfoPathList(thePlayer, city)
-	if(city == "San Andreas") then
-		local List = {}
-		for i, _ in pairs(PathNodes) do
-			List[i] = false
-		end
-		triggerClientEvent(source, "InfoPathLoading", source, city, List)
-	elseif(city == "Liberty City") then
-		local List = {}
-		for i, _ in pairs(PathNodesLC) do
-			List[i] = false
-		end
-		triggerClientEvent(source, "InfoPathLoading", source, city, List)
+	local List = {}
+	for i, _ in pairs(PathNodes[city]) do
+		List[i] = false
 	end
+	triggerClientEvent(source, "InfoPathLoading", source, city, List)
 end
 addEvent("getInfoPathList", true)
 addEventHandler("getInfoPathList", root, getInfoPathList)
@@ -55298,18 +55290,10 @@ addEventHandler("getInfoPathList", root, getInfoPathList)
 
 
 function CreateVehicleNodeMarker(city, zone, last)
-	if(city == "San Andreas") then
-		if(PathNodes[zone]) then
-			triggerClientEvent(source, "InfoPath", source, city, zone, toJSON(PathNodes[zone]), last)
-		else
-			triggerClientEvent(source, "InfoPath", source, city, zone, nil, last)
-		end
-	elseif(city == "Liberty City") then
-		if(PathNodesLC[zone]) then
-			triggerClientEvent(source, "InfoPath", source, city, zone, toJSON(PathNodesLC[zone]), last)
-		else
-			triggerClientEvent(source, "InfoPath", source, city, zone, nil, last)
-		end
+	if(PathNodes[city][zone]) then
+		triggerClientEvent(source, "InfoPath", source, city, zone, toJSON(PathNodes[city][zone]), last)
+	else
+		triggerClientEvent(source, "InfoPath", source, city, zone, nil, last)
 	end
 end
 addEvent("CreateVehicleNodeMarker", true)
@@ -55332,11 +55316,12 @@ function table.copy(t)
 end
 
 
-function NEWGPSFound(x,y,z, x2,y2,z2)
-	local startzone = getZoneName(x,y,z)
-	local endzone = getZoneName(x2,y2,z2)
+function NEWGPSFound(city, x,y,z, x2,y2,z2)
+	local startzone = exports["228"]:GetZoneName(x,y,z, false, city)
+	local endzone =  exports["228"]:GetZoneName(x2,y2,z2, false, city)
+	if(not PathNodes[city]) then return false end
 	
-	if(PathNodes[startzone] and PathNodes[endzone]) then
+	if(PathNodes[city][startzone] and PathNodes[city][endzone]) then
 		local tmp = {
 			["startdist"] = {[1] = 9999, [2] = 9999, [3] = 9999, [4] = 9999}, 
 			["enddist"] = {[1] = 9999, [2] = 9999, [3] = 9999, [4] = 9999}, 
@@ -55348,7 +55333,7 @@ function NEWGPSFound(x,y,z, x2,y2,z2)
 			["usablepaths"] = {[startzone] = {}}
 		}
 		for count = 1, 4 do
-			for i,k in pairs(PathNodes[startzone]) do
+			for i,k in pairs(PathNodes[city][startzone]) do
 				local double = false
 				for _, b in pairs(tmp["startnode"]) do
 					if(b == i) then
@@ -55366,7 +55351,7 @@ function NEWGPSFound(x,y,z, x2,y2,z2)
 		end
 		
 		for count = 1, 4 do
-			for i,k in pairs(PathNodes[endzone]) do
+			for i,k in pairs(PathNodes[city][endzone]) do
 				local double = false
 				for _, b in pairs(tmp["endnode"]) do
 					if(b == i) then
@@ -55400,15 +55385,15 @@ function NEWGPSFound(x,y,z, x2,y2,z2)
 				else
 					tmp["usablepaths"][arr[1]][arr[2]] = true
 					
-					if(PathNodes[arr[1]][arr[2]][6]) then
-						if(PathNodes[arr[1]][arr[2]+1]) then
+					if(PathNodes[city][arr[1]][arr[2]][6]) then
+						if(PathNodes[city][arr[1]][arr[2]+1]) then
 							table.insert(tmp["threads"], {{arr[1], arr[2]}})
 							local newarr = table.copy(arr[4])
 							table.insert(newarr, #tmp["threads"])
 							table.insert(tmp["nextnodes"], {arr[1], arr[2]+1, #tmp["threads"], newarr})
 						end
 						
-						for i2, k2 in pairs(PathNodes[arr[1]][arr[2]][6]) do
+						for i2, k2 in pairs(PathNodes[city][arr[1]][arr[2]][6]) do
 							table.insert(tmp["threads"], {{arr[1], arr[2]}})
 							local newarr = table.copy(arr[4])
 							table.insert(newarr, #tmp["threads"])
@@ -55447,24 +55432,21 @@ function GetVehicleNodes()
 end
 		
 
-function GetVehicleNodesLC()
-	return PathNodesLC
-end
 
-
-function GetCoordsByGPS(arr)
+function GetCoordsByGPS(city, arr)
 	local out = {}
 	for _, v in pairs(arr) do
-		out[#out+1] = {PathNodes[v[1]][v[2]][2], PathNodes[v[1]][v[2]][3], PathNodes[v[1]][v[2]][4]}
+		out[#out+1] = {PathNodes[city][v[1]][v[2]][2], PathNodes[city][v[1]][v[2]][3], PathNodes[city][v[1]][v[2]][4]}
 	end	
 	return out
 end
 		
 
 function GetPathByCoordsNEW(thePlayer, gx,gy,gz,gx2,gy2,gz2)
-	local arr = NEWGPSFound(gx,gy,gz,gx2,gy2,gz2)
+	local City = getPlayerCity(thePlayer)
+	local arr = NEWGPSFound(City, gx,gy,gz,gx2,gy2,gz2)
 	if(arr) then
-		triggerClientEvent(thePlayer, "SetGPS", thePlayer, toJSON(GetCoordsByGPS(arr)))
+		triggerClientEvent(thePlayer, "SetGPS", thePlayer, toJSON(GetCoordsByGPS(City, arr)))
 		return true
 	else
 		triggerClientEvent(thePlayer, "ToolTip", thePlayer, "GPS: Невозможно найти путь!")
@@ -55473,3 +55455,8 @@ function GetPathByCoordsNEW(thePlayer, gx,gy,gz,gx2,gy2,gz2)
 end
 addEvent("GetPathByCoordsNEW", true)
 addEventHandler("GetPathByCoordsNEW", root, GetPathByCoordsNEW)
+
+
+function getPlayerCity(thePlayer)
+	return getElementData(thePlayer, "City") or "San Andreas"
+end
