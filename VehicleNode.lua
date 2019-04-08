@@ -55318,8 +55318,8 @@ end
 
 
 function NEWGPSFound(city, x,y,z, x2,y2,z2)
-	local startzone = exports["228"]:GetZoneName(x,y,z, false, city)
-	local endzone =  exports["228"]:GetZoneName(x2,y2,z2, false, city)
+	local startzone = exports["ps2_weather"]:GetZoneName(x,y,z, false, city)
+	local endzone =  exports["ps2_weather"]:GetZoneName(x2,y2,z2, false, city)
 	if(not PathNodes[city]) then return false end
 	
 	if(PathNodes[city][startzone] and PathNodes[city][endzone]) then
