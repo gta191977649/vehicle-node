@@ -55244,6 +55244,7 @@ local PathNodes = {["San Andreas"] = {
 }}
 
 PathNodes["Liberty City"] = PathNodesLC
+PathNodes["Vice City"] = PathNodesVC
 
 for name, dat in pairs(PathNodes["San Andreas"]) do
 	for i, arr in pairs(dat) do
