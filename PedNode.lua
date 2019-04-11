@@ -1,5 +1,6 @@
 -- x,y,z, x2,y2,z2, rz (+ - 180)
 local PedNodes = {
+	["San Andreas"] = {
 	["Ganton"] = {
 		[1] = {2224, -1758, 12.6, 2406, -1755, 12.5, 0}, 
 		[2] = {2348, -1652, 12.5, 2498, -1650, 12.5, 0}, 
@@ -412,7 +413,7 @@ local PedNodes = {
 		[3] = {1770, -1944, 12.6, 1774, -1932, 12.6, 0}, 
 		[4] = {1774, -1944, 12.6, 1781, -1936, 12.5, 0}, 
 	}, 	
-}
+}}
 
 local PedSeat = {
 	["Idlewood"] = {
@@ -468,9 +469,11 @@ local rand = {"seat_talk_02", "seat_talk_01"}
 --end
 
 
-function ZonesGroundPosition(zone)
-	if(PedNodes[zone]) then
-		triggerClientEvent(source, "InfoPathPed", source, zone, toJSON(PedNodes[zone]))
+function ZonesGroundPosition(city, zone)
+	if(PedNodes[city]) then
+		if(PedNodes[city][zone]) then
+			triggerClientEvent(source, "InfoPathPed", source, city, zone, toJSON(PedNodes[city][zone]))
+		end
 	end
 end
 addEvent("ZonesGroundPosition", true)
