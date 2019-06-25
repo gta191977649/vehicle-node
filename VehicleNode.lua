@@ -5463,7 +5463,7 @@ local PathNodes = {["San Andreas"] = {
 		[512] = {true, 1925, 2345.1, 9.7, false}, 
 		[513] = {true, 1925, 2335.1, 9.7, false}, 
 		[514] = {true, 1925, 2324.4, 9.7, false}, 
-		[515] = {true, 1925, 2314, 9.7, false}, 
+		[515] = {true, 1925, 2314, 9.7, "Bus Stop"}, 
 		[516] = {true, 1925, 2303.9, 9.7, false}, 
 		[517] = {true, 1925, 2297, 9.7, "north"}, 
 		[518] = {true, 1925, 2283, 9.8, false, {{"Redsands East", 640}}}, 
@@ -59512,7 +59512,7 @@ local PathNodes = {["San Andreas"] = {
 		[2702] = {true, 1748.7, 2175.6, 9.8, false}, 
 		[2703] = {true, 1740.8, 2175.6, 9.7, "west"}, 
 		[2704] = {true, 1729.8, 2175.6, 9.8, false, {{"Redsands West", 3900}}}, 
-		[2705] = {true, 1725.7, 2175.6, 9.8, false, {{"Redsands West", 328}}},
+		[2705] = {true, 1725, 2175.6, 9.8, false, {{"Redsands West", 328}}},
 		[2706] = {true, 1715.8, 2175.6, 9.7, false}, 
 		[2707] = {true, 1707.1, 2175.7, 9.8, false, {{"Redsands West", 2425}}},
 		[2708] = {true, 1693.2, 2175.7, 9.7, false}, 
@@ -59520,7 +59520,7 @@ local PathNodes = {["San Andreas"] = {
 		[2710] = {true, 1672.1, 2175.8, 9.7, false}, 
 		[2711] = {true, 1661.9, 2175.8, 9.7, false}, 
 		[2712] = {true, 1651.6, 2175.7, 9.7, false}, 
-		[2713] = {true, 1641.4, 2175.8, 9.7, false}, 
+		[2713] = {true, 1641.4, 2175.8, 9.7, "Bus Stop"}, 
 		[2714] = {true, 1631.4, 2175.8, 9.7, "west"}, 
 		[2715] = {true, 1618.3, 2175.8, 9.8, false, {{"Redsands West", 2417}}},
 		[2716] = {true, 1608.2, 2175.8, 9.7, false}, 
@@ -59700,9 +59700,8 @@ local PathNodes = {["San Andreas"] = {
 		[3522] = {true, 1565, 2236.8, 9.8, false}, 
 		[3523] = {true, 1565, 2226, 9.7, false}, 
 		[3524] = {true, 1565, 2215.5, 9.7, false}, 
-		[3525] = {true, 1565, 2204.3, 9.7, false}, 
-		[3526] = {true, 1565, 2194, 9.7, false}, 
-		[3527] = {true, 1565, 2185.9, 9.7, "north", {{"Redsands West", 2721}}}, 
+		[3525] = {true, 1565, 2200.5, 9.7, "Bus Stop"}, 
+		[3526] = {true, 1565, 2185.9, 9.7, "north", {{"Redsands West", 2721}}}, 
 		
 		[3600] = {true, 1776.1, 2276, 11.1, false}, 
 		[3601] = {true, 1764.8, 2276, 10.6, false}, 
@@ -59746,14 +59745,13 @@ local PathNodes = {["San Andreas"] = {
 		[3719] = {true, 1770.8, 2271, 10.9, false, {{"Harry Gold Parkway", 2800}}}, 
 		
 		[3800] = {true, 1725, 2259.8, 9.7, false}, 
-		[3801] = {true, 1725, 2249.6, 9.7, false}, 
-		[3802] = {true, 1725, 2239.5, 9.7, false}, 
-		[3803] = {true, 1725, 2229.4, 9.7, false}, 
-		[3804] = {true, 1725, 2218.7, 9.7, false}, 
-		[3805] = {true, 1725, 2208.6, 9.7, false}, 
-		[3806] = {true, 1725, 2198.5, 9.7, false}, 
-		[3807] = {true, 1725, 2186.3, 9.7, "north", {{"Redsands West", 2705}}}, 
-		
+		[3801] = {true, 1725, 2247.2, 9.7, "Bus Stop"}, 
+		[3802] = {true, 1725, 2229.4, 9.7, false}, 
+		[3803] = {true, 1725, 2218.7, 9.7, false}, 
+		[3804] = {true, 1725, 2208.6, 9.7, false}, 
+		[3805] = {true, 1725, 2198.5, 9.7, false}, 
+		[3806] = {true, 1725, 2186.3, 9.7, "north", {{"Redsands West", 2705}}}, 
+		 
 		[3900] = {true, 1730, 2186.8, 9.7, false}, 
 		[3901] = {true, 1730, 2197.9, 9.7, false}, 
 		[3902] = {true, 1730, 2208.6, 9.7, false}, 
@@ -64640,6 +64638,106 @@ function GetPathByCoordsNEW(thePlayer, gx,gy,gz,gx2,gy2,gz2)
 end
 addEvent("GetPathByCoordsNEW", true)
 addEventHandler("GetPathByCoordsNEW", root, GetPathByCoordsNEW)
+
+
+function FindBusStop(thePlayer, city)
+	local x,y,z = getElementPosition(thePlayer)
+	local startzone = exports["ps2_weather"]:GetZoneName(x,y,z, false, city)
+	
+	if(PathNodes[city][startzone]) then
+		local tmp = {
+			["startdist"] = {[1] = 9999, [2] = 9999, [3] = 9999, [4] = 9999}, 
+			["enddist"] = {[1] = 9999, [2] = 9999, [3] = 9999, [4] = 9999}, 
+			["tmpdist"] = 9999, 
+			["startnode"] = {},
+			["endnode"] = {},
+			["nextnodes"] = {}, 
+			["threads"] = {}, 
+			["usablepaths"] = {[startzone] = {}}
+		}
+		for count = 1, 4 do -- Находим 4 ближние ноды
+			for i,k in pairs(PathNodes[city][startzone]) do
+				local double = false
+				for _, b in pairs(tmp["startnode"]) do
+					if(b == i) then
+						double = true 
+					end
+				end
+				if(not double) then
+					tmp["tmpdist"] = getDistanceBetweenPoints2D(x, y, k[2], k[3])
+					if(tmp["tmpdist"] < tmp["startdist"][count]) then
+						tmp["startdist"][count] = tmp["tmpdist"]
+						tmp["startnode"][count] = i
+					end
+				end
+			end
+		end
+		
+		for i, v in pairs(tmp["startnode"]) do
+			tmp["nextnodes"][i] = {startzone, v, i, {[1] = i}}
+			tmp["threads"][i] = {}
+		end
+		
+		
+		
+		for is = 1, 10000 do
+			for i, arr in pairs(tmp["nextnodes"]) do
+				if(not tmp["usablepaths"][arr[1]]) then 
+					tmp["usablepaths"][arr[1]] = {}
+				end
+				
+				if(tmp["usablepaths"][arr[1]][arr[2]]) then -- Если попали в петлю
+				--	tmp["threads"][arr[3]] = nil
+					tmp["nextnodes"][i] = nil
+				else
+					tmp["usablepaths"][arr[1]][arr[2]] = true
+					
+					if(PathNodes[city][arr[1]][arr[2]][6]) then
+						if(PathNodes[city][arr[1]][arr[2]+1]) then
+							table.insert(tmp["threads"], {{arr[1], arr[2]}})
+							local newarr = table.copy(arr[4])
+							table.insert(newarr, #tmp["threads"])
+							table.insert(tmp["nextnodes"], {arr[1], arr[2]+1, #tmp["threads"], newarr})
+						end
+						
+						for i2, k2 in pairs(PathNodes[city][arr[1]][arr[2]][6]) do
+							table.insert(tmp["threads"], {{arr[1], arr[2]}})
+							local newarr = table.copy(arr[4])
+							table.insert(newarr, #tmp["threads"])
+							table.insert(tmp["nextnodes"], {k2[1], k2[2], #tmp["threads"], newarr})
+						end
+					else
+						table.insert(tmp["threads"][arr[3]], {arr[1], arr[2]})
+						tmp["nextnodes"][i] = {arr[1], arr[2]+1, arr[3], arr[4]}
+					end
+					
+					
+					if(PathNodes[city][arr[1]][arr[2]][5]) then
+						if(PathNodes[city][arr[1]][arr[2]][5] == "Bus Stop") then
+							local out = {}
+							for _, id in pairs(arr[4]) do
+								for _, el in pairs(tmp["threads"][id]) do
+									table.insert(out, el)
+								end
+							end
+							if(#out > 1) then -- Если размер пути больше 1
+								--outputChatBox("Готово! "..arr[1].." "..arr[2].." Размер пути: "
+								--..#out.." Всего потоков: "..#tmp["threads"].." Количество потоков:"..#arr[4])
+								
+								triggerClientEvent(thePlayer, "SetGPS", thePlayer, toJSON(GetCoordsByGPS(city, out)))
+								return true
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+		
+end
+addEvent("FindBusStop", true)
+addEventHandler("FindBusStop", root, FindBusStop)
+
 
 
 function getPlayerCity(thePlayer)
