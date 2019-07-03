@@ -292,7 +292,7 @@ function updateCamera()
 					local x,y,z = arr2[2], arr2[3], arr2[4]
 					
 					local px,py,pz = getElementPosition(localPlayer)
-					if(getDistanceBetweenPoints2D(x,y, px, py) < 100) then
+					if(getDistanceBetweenPoints2D(x,y, px, py) < 300) then
 						local text = '['..i..'] '..zone
 						if(arr2[5]) then
 							if(trafficlight[tostring(getTrafficLightState())] == arr2[5]) then
@@ -562,7 +562,7 @@ function playerPressedKey(button, press)
 					destroyElement(PData["WaypointBlip"])
 				else
 					local x,y,z = GetCursorPositionOnMap()
-					PData["WaypointBlip"] = createBlip(x*50, y*50, 0, 41)
+					PData["WaypointBlip"] = createBlip(x*50, y*50, 0, 41, 255,255,255,255, 0, 65535)
 					local px,py,pz = getElementPosition(localPlayer)
 					triggerServerEvent("GetPathByCoordsNEW", localPlayer, localPlayer, px, py, pz, x*50, y*50, 20)
 					--[[triggerServerEvent("saveserver", localPlayer, localPlayer, 
