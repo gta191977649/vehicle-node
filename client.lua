@@ -231,6 +231,20 @@ end
 
 function updateCamera()
 	if(getDevelopmentMode()) then
+	
+		for _, thePed in pairs(getElementsByType("ped", getRootElement(), true)) do
+			local path = getElementData(thePed, "path")
+			if(path) then
+				for i, dat in pairs(path) do
+					if(path[i+1]) then
+						dxDrawLine3D(path[i][1], path[i][2], path[i][3]+1, path[i+1][1], path[i+1][2], path[i+1][3]+1, tocolor (255, 0, 0, 230), 2)
+					end
+				end
+			end
+		end
+	
+	
+	
 		local px,py,pz = getElementPosition(localPlayer)
 	
 		local material = GetGroundMaterial(px,py,pz,pz-2, getPlayerCity(localPlayer))
@@ -562,7 +576,7 @@ function playerPressedKey(button, press)
 					destroyElement(PData["WaypointBlip"])
 				else
 					local x,y,z = GetCursorPositionOnMap()
-					PData["WaypointBlip"] = createBlip(x*50, y*50, 0, 41, 255,255,255,255, 0, 65535)
+					PData["WaypointBlip"] = createBlip(x*50, y*50, 0, 41, 2, 255,255,255, 0, 65535)
 					local px,py,pz = getElementPosition(localPlayer)
 					triggerServerEvent("GetPathByCoordsNEW", localPlayer, localPlayer, px, py, pz, x*50, y*50, 20)
 					--[[triggerServerEvent("saveserver", localPlayer, localPlayer, 
@@ -609,6 +623,8 @@ function resourcemap()
 		showCursor(false)
 	end
 end
+addEvent("ResourceMap", true)
+addEventHandler("ResourceMap", getRootElement(), resourcemap)
 bindKey("F10", "down", resourcemap)
 
 
@@ -708,34 +724,36 @@ function addLabelOnClick(button, state, absoluteX, absoluteY, worldX, worldY, wo
 		worldY = math.round(worldY, 0)
 		worldZ = math.round(worldZ, 1)
 		if(button == "left") then
-			if(state == "down") then
-				PData['changezone'][#PData['changezone']+1] = {[1] = {worldX, worldY, worldZ, getZoneName(worldX, worldY, worldZ, false)}}
-			else
-				local zone = getZoneName(worldX, worldY, worldZ, false)
-				if(zone == PData['changezone'][#PData['changezone']][1][4]) then
-					local oldx, oldy, oldz = PData['changezone'][#PData['changezone']][1][1], PData['changezone'][#PData['changezone']][1][2], PData['changezone'][#PData['changezone']][1][3]
-		
-
-					local out = {oldx, oldy, oldz, worldX, worldY, worldZ}
-					if(out[1] > out[4]) then
-						out = {out[4], out[2], math.round(getGroundPosition(out[4], out[2], out[3]+3), 1), out[1], out[5], math.round(getGroundPosition(out[1], out[5], out[6]+3), 1)}
-					end
-					
-					if(out[2] > out[5]) then
-						out = {out[1], out[5], math.round(getGroundPosition(out[1], out[5], out[3]+3), 1), out[4], out[2], math.round(getGroundPosition(out[4], out[2], out[6]+3), 1)}
-					end
-					
-	
-					PData['changezone'][#PData['changezone']][1] = {out[1], out[2], out[3], zone}
-					PData['changezone'][#PData['changezone']][2] = {out[4], out[5], out[6]}
-					
-
-					triggerServerEvent("saveserver", localPlayer, localPlayer, 
-					out[1], out[2], out[3], 
-					out[4], out[5], out[6], "PedPath"
-					)
+			if(getKeyState("lctrl")) then
+				if(state == "down") then
+					PData['changezone'][#PData['changezone']+1] = {[1] = {worldX, worldY, worldZ, getZoneName(worldX, worldY, worldZ, false)}}
 				else
-					PData['changezone'][#PData['changezone']] = nil
+					local zone = getZoneName(worldX, worldY, worldZ, false)
+					if(zone == PData['changezone'][#PData['changezone']][1][4]) then
+						local oldx, oldy, oldz = PData['changezone'][#PData['changezone']][1][1], PData['changezone'][#PData['changezone']][1][2], PData['changezone'][#PData['changezone']][1][3]
+				
+		
+						local out = {oldx, oldy, oldz, worldX, worldY, worldZ}
+						if(out[1] > out[4]) then
+							out = {out[4], out[2], math.round(getGroundPosition(out[4], out[2], out[3]+3), 1), out[1], out[5], math.round(getGroundPosition(out[1], out[5], out[6]+3), 1)}
+						end
+						
+						if(out[2] > out[5]) then
+							out = {out[1], out[5], math.round(getGroundPosition(out[1], out[5], out[3]+3), 1), out[4], out[2], math.round(getGroundPosition(out[4], out[2], out[6]+3), 1)}
+						end
+						
+			
+						PData['changezone'][#PData['changezone']][1] = {out[1], out[2], out[3], zone}
+						PData['changezone'][#PData['changezone']][2] = {out[4], out[5], out[6]}
+						
+		
+						triggerServerEvent("saveserver", localPlayer, localPlayer, 
+						out[1], out[2], out[3], 
+						out[4], out[5], out[6], "PedPath"
+						)
+					else
+						PData['changezone'][#PData['changezone']] = nil
+					end
 				end
 			end
 		end
@@ -885,6 +903,7 @@ end
 
 
 
+
 function getPlayerCity(thePlayer)
 	return getElementData(thePlayer, "City") or "San Andreas"
 end
@@ -920,6 +939,9 @@ function dxDrawBorderedText(text, left, top, right, bottom, color, scale, font, 
 		dxDrawText(text, left, top, right, bottom, color, scale, font, alignX, alignY, clip, wordBreak, postGUI, true)
 	end
 end
+
+
+
 
 
 
