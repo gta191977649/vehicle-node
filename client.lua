@@ -812,55 +812,57 @@ function MemText(text, left, top, color, scale, font, border, incline, centerX, 
 		
 		if(not VideoMemory["HUD"][index]) then
 			VideoMemory["HUD"][index] = dxCreateRenderTarget(w+((w*incline)/4),h, true)
-			
-			dxSetRenderTarget(VideoMemory["HUD"][index], true)
-			dxSetBlendMode("modulate_add")
-			
-			local posx, posy = ((w*incline)/4),0
-			if(border) then
-				posx = posx+border
-				posy = posy+border
+		end
+		
+		dxSetRenderTarget(VideoMemory["HUD"][index], true)
+		dxSetBlendMode("modulate_add")
+		
+		local posx, posy = ((w*incline)/4),0
+		if(border) then
+			posx = posx+border
+			posy = posy+border
+		end
+		
+		
+		local textb = string.gsub(text, "#%x%x%x%x%x%x", "")
+		for oX = -border, border do 
+			for oY = -border, border do 
+				dxDrawText(textb, posx+oX, posy+oY, 0+oX, 0+oY, tocolor(0, 0, 0, 255), scale, font, "left", "top", false, false,false,false)
 			end
-			
-			
-			local textb = string.gsub(text, "#%x%x%x%x%x%x", "")
-			for oX = -border, border do 
-				for oY = -border, border do 
-					dxDrawText(textb, posx+oX, posy+oY, 0+oX, 0+oY, tocolor(0, 0, 0, 255), scale, font, "left", "top", false, false,false,false)
-				end
-			end
+		end
 
-			dxDrawText(text, posx, posy, 0, 0, color, scale, font, "left", "top", false,false,false,true)
+		dxDrawText(text, posx, posy, 0, 0, color, scale, font, "left", "top", false,false,false,true)
 
-			
-			dxSetBlendMode("blend")
-			dxSetRenderTarget()
-			
-			if(incline > 0) then 
-				local pixels = dxGetTexturePixels(VideoMemory["HUD"][index])
-				local x, y = dxGetPixelsSize(pixels)
-				local texture = dxCreateTexture(x,y, "argb")
-				local pixels2 = dxGetTexturePixels(texture)
-				local pady = 0
-				for y2 = 0, y-1 do
-					for x2 = 0, x-1 do
-						local colors = {dxGetPixelColor(pixels, x2,y2)}
-						if(colors[4] > 0) then
-							dxSetPixelColor(pixels2, x2-pady, y2, colors[1],colors[2],colors[3],colors[4])
-						end
+		
+		dxSetBlendMode("blend")
+		dxSetRenderTarget()
+		
+		
+		if(incline > 0) then 
+			local pixels = dxGetTexturePixels(VideoMemory["HUD"][index])
+			local x, y = dxGetPixelsSize(pixels)
+			local texture = dxCreateTexture(x,y, "argb")
+			local pixels2 = dxGetTexturePixels(texture)
+			local pady = 0
+			for y2 = 0, y-1 do
+				for x2 = 0, x-1 do
+					local colors = {dxGetPixelColor(pixels, x2,y2)}
+					if(colors[4] > 0) then
+						dxSetPixelColor(pixels2, x2-pady, y2, colors[1],colors[2],colors[3],colors[4])
 					end
-					pady = pady+incline
 				end
-				
-				dxSetTexturePixels(texture, pixels2)
-				VideoMemory["HUD"][index] = texture
+				pady = pady+incline
 			end
+			
+			dxSetTexturePixels(texture, pixels2)
+			VideoMemory["HUD"][index] = texture
 		end
 		
 		if(scale3D) then 
 			w = w/scale3D 
 			h = h/scale3D
 		end
+		
 		if(centerX) then 
 			if(centerX == "right") then 
 				left = left-(w) 
