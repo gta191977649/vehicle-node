@@ -1,8 +1,10 @@
 local screenWidth, screenHeight = guiGetScreenSize()
+local scale = (screenWidth/1920)+(screenHeight/1080)
 local NewScale = ((screenWidth/1920)+(screenHeight/1080))/2
 local GroundMaterial = {}
 local VideoMemory = {["HUD"] = {}}
 local RailRoadsSA = exports["vehicle_node"]:GetRailnodes()
+
 local trafficlight = {
 	["0"] = "west",
 	["1"] = "west",
@@ -11,13 +13,11 @@ local trafficlight = {
 	["4"] = "north"
 }
 local PData = {
-	["infopath"] = {
-		["San Andreas"] = {}, 
-		["Liberty City"] = {}, 
-		["Vice City"] = {}
-	}, -- Для разработчика
 	["changezone"] = {} -- Для разработчика
 }
+
+
+
 
 
 -- Object, Model, Scale, x,y,z,rz, bizname
@@ -59,25 +59,11 @@ local ResourceInMap = {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 function map()
 	PData["ResourceMap"] = {[1] = {}, [2] = {}, [3] = {}} -- 1 Roads, 2 Railroads, 3 GPS
 	
-	for zone, arr in pairs(PData["infopath"][getPlayerCity(localPlayer)]) do
-		if(arr) then for i, arr2 in pairs(arr) do
-			
+	for zone, arr in pairs(PathNodes[getPlayerCity(localPlayer)]) do
+		for i, arr2 in pairs(arr) do
 			local nextmarkers = {}
 			if(arr2[6]) then
 				for _,k in pairs(arr2[6]) do
@@ -85,35 +71,31 @@ function map()
 				end
 			end
 			
-			if(PData["infopath"][getPlayerCity(localPlayer)][zone][tostring(i+1)]) then
+			if(PathNodes[getPlayerCity(localPlayer)][zone][i+1]) then
 				table.insert(nextmarkers, {zone, i+1})
 			end
 			
 			for _, arr3 in pairs(nextmarkers) do
-				if(PData["infopath"][getPlayerCity(localPlayer)][arr3[1]]) then
-					local dat = PData["infopath"][getPlayerCity(localPlayer)][arr3[1]][tostring(arr3[2])]
-					if(dat) then
-						local color = tocolor(60,60,60,255)
-						if(getPlayerCity(localPlayer) == "Vice City") then
-							color = tocolor(0,0,0,255)
-						end
-						if(dat[1] == "Closed" or arr2[1] == "Closed") then
-							color = tocolor(90,90,90,255)
-						end
-						
-						x,y,z = GetCoordOnMap(arr2[2], arr2[3], arr2[4])
-						x2,y2,z2 = GetCoordOnMap(dat[2], dat[3], dat[4])
-						PData["ResourceMap"][1][#PData["ResourceMap"][1]+1] = {x,y,z,x2,y2,z2, color, 10}
-						
-						if(dat[5]) then
-							if(dat[5] == "Bus Stop") then
-								table.insert(ResourceInMap, {false, 1257, 0.1, arr2[2], arr2[3], arr2[4],findRotation(arr2[2], arr2[3],dat[2], dat[3]), "BUS STOP"})
-							end
-						end
+				local dat = PathNodes[getPlayerCity(localPlayer)][arr3[1]][arr3[2]]
+				local color = tocolor(60,60,60,255)
+				if(getPlayerCity(localPlayer) == "Vice City") then
+					color = tocolor(0,0,0,255)
+				end
+				if(dat[1] == "Closed" or arr2[1] == "Closed") then
+					color = tocolor(90,90,90,255)
+				end
+				
+				x,y,z = GetCoordOnMap(arr2[2], arr2[3], arr2[4])
+				x2,y2,z2 = GetCoordOnMap(dat[2], dat[3], dat[4])
+				PData["ResourceMap"][1][#PData["ResourceMap"][1]+1] = {x,y,z,x2,y2,z2, color, 10}
+				
+				if(dat[5]) then
+					if(dat[5] == "Bus Stop") then
+						table.insert(ResourceInMap, {false, 1257, 0.1, arr2[2], arr2[3], arr2[4],findRotation(arr2[2], arr2[3],dat[2], dat[3]), "BUS STOP"})
 					end
 				end
 			end
-		end end
+		end
 	end
 	
 	for i, dat in pairs(ResourceInMap) do
@@ -300,63 +282,54 @@ function updateCamera()
 		end
 	
 	
-		for zone, arr in pairs(PData["infopath"][getPlayerCity(localPlayer)]) do
-			if(arr) then
-				for i, arr2 in pairs(arr) do
-					local x,y,z = arr2[2], arr2[3], arr2[4]
+		for zone, arr in pairs(PathNodes[getPlayerCity(localPlayer)]) do
+			for i, arr2 in pairs(arr) do
+				local x,y,z = arr2[2], arr2[3], arr2[4]
+				
+				local px,py,pz = getElementPosition(localPlayer)
+				if(getDistanceBetweenPoints2D(x,y, px, py) < 300) then
+					local text = '['..i..'] '..zone
+					if(arr2[5]) then
+						if(trafficlight[tostring(getTrafficLightState())] == arr2[5]) then
+							text = text.." #e446fa["..arr2[5].."]"
+						else
+							text = text.." #32CD32["..arr2[5].."]"
+						end
+					end
+					create3dtext(text, x,y,z+1, NewScale*2, 60, tocolor(228, 250, 70, 180), "default-bold")
+					local nextmarkers = {}
+					if(arr2[6]) then
+						for _,k in pairs(arr2[6]) do
+							table.insert(nextmarkers, {k[1], k[2]})
+						end
+					end
 					
-					local px,py,pz = getElementPosition(localPlayer)
-					if(getDistanceBetweenPoints2D(x,y, px, py) < 300) then
-						local text = '['..i..'] '..zone
-						if(arr2[5]) then
-							if(trafficlight[tostring(getTrafficLightState())] == arr2[5]) then
-								text = text.." #e446fa["..arr2[5].."]"
-							else
-								text = text.." #32CD32["..arr2[5].."]"
-							end
+					if(PathNodes[getPlayerCity(localPlayer)][zone][i+1]) then
+						table.insert(nextmarkers, {zone, i+1})
+					end
+					
+					for _, arr3 in pairs(nextmarkers) do
+						local dat = PathNodes[getPlayerCity(localPlayer)][arr3[1]][arr3[2]]
+						local color = tocolor(50,255,50,150)
+						if(dat[1] == "Closed" or arr2[1] == "Closed") then
+							color = tocolor(255,50,50,150)
 						end
-						create3dtext(text, x,y,z+1, NewScale*2, 60, tocolor(228, 250, 70, 180), "default-bold")
-						local nextmarkers = {}
-						if(arr2[6]) then
-							for _,k in pairs(arr2[6]) do
-								table.insert(nextmarkers, {k[1], k[2]})
-							end
-						end
+						local x2,y2,z2 = dat[2], dat[3], dat[4]
 						
-						if(PData["infopath"][getPlayerCity(localPlayer)][zone][tostring(i+1)]) then
-							table.insert(nextmarkers, {zone, i+1})
-						end
+						dxDrawLine3D(x,y,z+0.2,x2,y2,z2+0.2, color, 6)
 						
-						for _, arr3 in pairs(nextmarkers) do
-							if(PData["infopath"][getPlayerCity(localPlayer)][arr3[1]]) then
-								local dat = PData["infopath"][getPlayerCity(localPlayer)][arr3[1]][tostring(arr3[2])]
-								if(dat) then
-									local color = tocolor(50,255,50,150)
-									if(dat[1] == "Closed" or arr2[1] == "Closed") then
-										color = tocolor(255,50,50,150)
-									end
-									local x2,y2,z2 = dat[2], dat[3], dat[4]
-									
-									dxDrawLine3D(x,y,z+0.2,x2,y2,z2+0.2, color, 6)
-									
-									
-									local a3,b3,c3 = getPointInFrontOfPoint(x2,y2,z2, findRotation(x,y,x2,y2)-60, 2)
-									local a4,b4,c4 = getPointInFrontOfPoint(x2,y2,z2, findRotation(x,y,x2,y2)-120, 2)
-									
-									dxDrawLine3D(x2,y2,z2+0.2,a3,b3,c3+0.2, color, 6)
-									dxDrawLine3D(x2,y2,z2+0.2,a4,b4,c4+0.2, color, 6)
-								end
-							end
-						end
+						
+						local a3,b3,c3 = getPointInFrontOfPoint(x2,y2,z2, findRotation(x,y,x2,y2)-60, 2)
+						local a4,b4,c4 = getPointInFrontOfPoint(x2,y2,z2, findRotation(x,y,x2,y2)-120, 2)
+						
+						dxDrawLine3D(x2,y2,z2+0.2,a3,b3,c3+0.2, color, 6)
+						dxDrawLine3D(x2,y2,z2+0.2,a4,b4,c4+0.2, color, 6)
 					end
 				end
 			end
 		end
 	end
-
-
-
-
+	
 	if(PData["ResourceMap"]) then
 		for i, dat in pairs(PData["ResourceMap"]) do
 			for name, v in pairs(dat) do
@@ -590,7 +563,9 @@ end
 addEventHandler("onClientKey", root, playerPressedKey)
 
 
-
+function GetVehicleNodesClient()
+	return PathNodes
+end
 
 
 function resourcemap()
@@ -600,7 +575,7 @@ function resourcemap()
 		if(theVehicle) then
 			setElementFrozen(theVehicle, true)
 		end
-		triggerServerEvent("getInfoPathList", localPlayer, localPlayer, getPlayerCity(localPlayer))
+		map()
 	else
 		setCameraTarget(localPlayer)
 		PData["ResourceMap"] = nil
@@ -628,42 +603,6 @@ addEventHandler("ResourceMap", getRootElement(), resourcemap)
 bindKey("F10", "down", resourcemap)
 
 
-function LoadZone(city, zone)
-	if(not PData["infopath"][city][zone]) then
-		triggerServerEvent("CreateVehicleNodeMarker", localPlayer, city, zone)
-		triggerServerEvent("ZonesGroundPosition", localPlayer, city, zone)
-	end
-end
-addEvent("LoadZone", true)
-addEventHandler("LoadZone", getRootElement(), LoadZone)
-
-
-
-
-
-function InfoPathLoading(city, dat)
-	local loadingzones = {}
-	for name, _ in pairs(dat) do
-		if(not PData["infopath"][city][name]) then
-			loadingzones[#loadingzones+1] = name
-		end
-	end
-	
-	if(#loadingzones == 0) then 
-		map()
-	else
-		for slot = 1, #loadingzones do
-			if(slot == #loadingzones) then
-				triggerServerEvent("CreateVehicleNodeMarker", localPlayer, city, loadingzones[slot], true)
-			else
-				triggerServerEvent("CreateVehicleNodeMarker", localPlayer, city, loadingzones[slot])
-			end
-		end
-	end
-	
-end
-addEvent("InfoPathLoading", true)
-addEventHandler("InfoPathLoading", localPlayer, InfoPathLoading)
 
 
 
@@ -688,31 +627,6 @@ function GetGroundMaterial(x,y,z,gz,city)
 end
 addEvent("GetGroundMaterial", true)
 addEventHandler("GetGroundMaterial", getRootElement(), GetGroundMaterial)
-
-
-
-
-
-
-function InfoPathPed(city, zone, arr)
-	local arr = fromJSON(arr)
-	if(not GroundMaterial[city]) then GroundMaterial[city] = {} end
-	GroundMaterial[city][zone] = {}
-	for i, dat2 in pairs(arr) do
-		for slotx = dat2[1], dat2[4] do
-			if(not GroundMaterial[city][zone][slotx]) then GroundMaterial[city][zone][slotx] = {} end
-			for sloty = dat2[2], dat2[5] do
-				GroundMaterial[city][zone][slotx][sloty] = 4
-			end
-		end
-		PData["changezone"][zone.." "..i] = {
-			[1] = {dat2[1], dat2[2], dat2[3], zone}, 
-			[2] = {dat2[4], dat2[5], dat2[6]}
-		}
-	end
-end
-addEvent("InfoPathPed", true)
-addEventHandler("InfoPathPed", localPlayer, InfoPathPed)
 
 
 
@@ -762,21 +676,6 @@ end
 addEventHandler("onClientClick", getRootElement(), addLabelOnClick)
 
 
-
-
-function InfoPath(city, zone, arr, last)
-	if(arr) then
-		PData["infopath"][city][zone] = fromJSON(arr)
-	else
-		PData["infopath"][city][zone] = nil
-	end
-	
-	if(last) then
-		map()
-	end
-end
-addEvent("InfoPath", true)
-addEventHandler("InfoPath", localPlayer, InfoPath)
 
 
 

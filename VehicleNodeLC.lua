@@ -1,5 +1,5 @@
 -- Транспорт, x,y,z, светофор [north[0], west[3]], узлы
-PathNodesLC = {
+PathNodes["Liberty City"] = {
 	["Saint Mark's"] = {
 		[1] = {true, 1043.5, 493.8, 18.7, false, {{"Saint Mark's", 1200}}}, 
 		[2] = {true, 1043.5, 498.5, 18.7, false, {{"Saint Mark's", 1100}}}, 
@@ -12551,3 +12551,8 @@ PathNodesLC = {
 
 
 
+
+function GetVehicleNodesClient()
+	outputConsole("?")
+	return PathNodes
+end

@@ -1,5 +1,5 @@
 -- Транспорт, x,y,z, светофор [north[0], west[3]], узлы
-PathNodesVC = {
+PathNodes["Vice City"] = {
 	["Starfish Island"] = {
 		[1] = {true, 4.3, -711.1, 5, false}, 
 		[2] = {true, 3.8, -700, 5, false}, 
