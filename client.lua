@@ -16,6 +16,11 @@ local PData = {
 	["changezone"] = {} -- Для разработчика
 }
 
+local DevelopmentZones = {
+	["San Andreas"] = {},
+	["Liberty City"] = {},
+	["Vice City"] = {}
+}
 
 
 
@@ -132,11 +137,9 @@ function map()
 				for _, arr3 in pairs(nextmarkers) do
 					if(RailRoadsSA[arr3[1]]) then
 						local dat = RailRoadsSA[arr3[1]][arr3[2]]
-						if(dat) then
-							x,y,z = GetCoordOnMap(arr2[2], arr2[3], arr2[4])
-							x2,y2,z2 = GetCoordOnMap(dat[2], dat[3], dat[4])
-							PData["ResourceMap"][2][#PData["ResourceMap"][2]+1] = {x,y,z,x2,y2,z2, tocolor(99,0,0,255), 10}
-						end
+						x,y,z = GetCoordOnMap(arr2[2], arr2[3], arr2[4])
+						x2,y2,z2 = GetCoordOnMap(dat[2], dat[3], dat[4])
+						PData["ResourceMap"][2][#PData["ResourceMap"][2]+1] = {x,y,z,x2,y2,z2, tocolor(99,0,0,255), 10}
 					end
 				end
 			end
@@ -213,7 +216,7 @@ end
 
 function updateCamera()
 	if(getDevelopmentMode()) then
-	
+		
 		for _, thePed in pairs(getElementsByType("ped", getRootElement(), true)) do
 			local path = getElementData(thePed, "path")
 			if(path) then
@@ -281,8 +284,15 @@ function updateCamera()
 	
 		end
 	
+		local x,y,z = getElementPosition(localPlayer)
+		local Zone = exports["ps2_weather"]:GetZoneName(x,y,z, false, getPlayerCity(localPlayer))
+		
+		if(not DevelopmentZones[getPlayerCity(localPlayer)][Zone]) then
+			DevelopmentZones[getPlayerCity(localPlayer)][Zone] = PathNodes[getPlayerCity(localPlayer)][Zone]
+		end
 	
-		for zone, arr in pairs(PathNodes[getPlayerCity(localPlayer)]) do
+	
+		for zone, arr in pairs(DevelopmentZones[getPlayerCity(localPlayer)]) do
 			for i, arr2 in pairs(arr) do
 				local x,y,z = arr2[2], arr2[3], arr2[4]
 				
