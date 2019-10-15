@@ -163,7 +163,9 @@ end
 
 function UpdateGPSMap()
 	if(PData["gps"]) then
-		PData["ResourceMap"][3] = {}
+		if(PData["ResourceMap"][3]) then
+			PData["ResourceMap"][3] = {}
+		end
 		local oldmarker = false
 		for i,v in pairs(PData["gps"]) do
 			if(oldmarker) then
@@ -216,19 +218,18 @@ end
 
 function updateCamera()
 	if(getDevelopmentMode()) then
-		
 		for _, thePed in pairs(getElementsByType("ped", getRootElement(), true)) do
 			local path = getElementData(thePed, "path")
 			if(path) then
 				for i, dat in pairs(path) do
 					if(path[i+1]) then
-						dxDrawLine3D(path[i][1], path[i][2], path[i][3]+1, path[i+1][1], path[i+1][2], path[i+1][3]+1, tocolor (255, 0, 0, 230), 2)
+						local node1 = PathNodes["San Andreas"][path[i][1]][path[i][2]]
+						local node2 = PathNodes["San Andreas"][path[i+1][1]][path[i+1][2]]
+						dxDrawLine3D(node1[2], node1[3], node1[4]+1, node2[2], node2[3], node2[4]+1, tocolor (255, 0, 0, 230), 2)
 					end
 				end
 			end
 		end
-	
-	
 	
 		local px,py,pz = getElementPosition(localPlayer)
 	
@@ -453,26 +454,6 @@ function updateCamera()
 				end
 			end
 		end
-		
-		local oldmarker = false
-		for i,v in pairs(PData["gps"]) do --тут
-			if(oldmarker) then
-				local x,y,z = unpack(fromJSON(getElementData(v, "coord")))
-	
-				if(getDistanceBetweenPoints2D(x,y, px, py) < 100) then
-					local x2,y2,z2 = unpack(fromJSON(getElementData(oldmarker, "coord")))
-	
-					local a3,b3,c3 = getPointInFrontOfPoint(x,y,z, findRotation(x,y,x2,y2)-60, 2)
-					local a4,b4,c4 = getPointInFrontOfPoint(x,y,z, findRotation(x,y,x2,y2)-120, 2)
-					
-					dxDrawLine3D(x,y,z+0.2,a3,b3,c3+0.2, tocolor(50,150,200,80), 6)
-					dxDrawLine3D(x,y,z+0.2,a4,b4,c4+0.2, tocolor(50,150,200,80), 6)
-					dxDrawLine3D(a3,b3,c3+0.2,a4,b4,c4+0.2, tocolor(50,150,200,80), 6)
-				end
-			end
-			oldmarker = v
-		end
-	
 	end
 end
 addEventHandler("onClientRender", getRootElement(), updateCamera)
