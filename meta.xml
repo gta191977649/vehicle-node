@@ -12,6 +12,7 @@
 	<export function='GetRailnodes' type="client" />
 	<export function='GetVehicleNodesClient' type="client" />
 	<export function='GetVehicleNodes' type="server" />
+	<export function='GetVehiclePathGrid' type="server" />
 	<export function='LoadZone' type="client" />
 	<export function='GetGroundMaterial' type="client" />
 	<export function='GetCoordsByGPS' type="server" />

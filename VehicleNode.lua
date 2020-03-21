@@ -1,3 +1,33 @@
+function math.round(number, decimals, method)
+    decimals = decimals or 0
+    local factor = 10 ^ decimals
+    if (method == "ceil" or method == "floor") then return math[method](number * factor) / factor
+    else return tonumber(("%."..decimals.."f"):format(number)) end
+end
+
+
+local PathGrid = {}
+
+for city, dat in pairs(PathNodes) do
+	PathGrid[city] = {}
+	for district, dat2 in pairs(dat) do
+		for i, dat3 in pairs(dat2) do
+			dat3[2], dat3[3] = math.round(dat3[2]), math.round(dat3[3])
+			if(not PathGrid[city][dat3[2]]) then PathGrid[city][dat3[2]] = {} end
+			if(not PathGrid[city][dat3[2]][dat3[3]]) then PathGrid[city][dat3[2]][dat3[3]] = {} end
+			table.insert(PathGrid[city][dat3[2]][dat3[3]], {district, i})
+		end
+	end
+end
+
+
+function GetVehiclePathGrid()
+	return PathGrid
+end
+
+
+
+
 --for name, dat in pairs(PathNodes["San Andreas"]) do
 --	for i, arr in pairs(dat) do
 --		if(arr[5]) then
@@ -289,6 +319,9 @@ addEventHandler("FindBusStop", root, FindBusStop)
 function getPlayerCity(thePlayer)
 	return getElementData(thePlayer, "City") or "San Andreas"
 end
+
+
+
 
 
 
