@@ -163,19 +163,21 @@ end
 
 function UpdateGPSMap()
 	if(PData["gps"]) then
-		if(PData["ResourceMap"][3]) then
-			PData["ResourceMap"][3] = {}
-		end
-		local oldmarker = false
-		for i,v in pairs(PData["gps"]) do
-			if(oldmarker) then
-				local x,y,z = unpack(fromJSON(getElementData(v, "coord")))
-				local x2,y2,z2 = unpack(fromJSON(getElementData(oldmarker, "coord")))
-				x,y,z = GetCoordOnMap(x,y,z)
-				x2,y2,z2 = GetCoordOnMap(x2,y2,z2)
-				PData["ResourceMap"][3][#PData["ResourceMap"][3]+1] = {x,y,z,x2,y2,z2, tocolor(255,0,0,255), 10}
+		if(PData["ResourceMap"]) then
+				if(PData["ResourceMap"][3]) then
+					PData["ResourceMap"][3] = {}
+				end
+			local oldmarker = false
+			for i,v in pairs(PData["gps"]) do
+				if(oldmarker) then
+					local x,y,z = unpack(fromJSON(getElementData(v, "coord")))
+					local x2,y2,z2 = unpack(fromJSON(getElementData(oldmarker, "coord")))
+					x,y,z = GetCoordOnMap(x,y,z)
+					x2,y2,z2 = GetCoordOnMap(x2,y2,z2)
+					PData["ResourceMap"][3][#PData["ResourceMap"][3]+1] = {x,y,z,x2,y2,z2, tocolor(255,0,0,255), 10}
+				end
+				oldmarker = v
 			end
-			oldmarker = v
 		end
 	end
 end
@@ -223,8 +225,8 @@ function updateCamera()
 			if(path) then
 				for i, dat in pairs(path) do
 					if(path[i+1]) then
-						local node1 = PathNodes["San Andreas"][path[i][1]][path[i][2]]
-						local node2 = PathNodes["San Andreas"][path[i+1][1]][path[i+1][2]]
+						local node1 = PathNodes[getPlayerCity(localPlayer)][path[i][1]][path[i][2]]
+						local node2 = PathNodes[getPlayerCity(localPlayer)][path[i+1][1]][path[i+1][2]]
 						dxDrawLine3D(node1[2], node1[3], node1[4]+1, node2[2], node2[3], node2[4]+1, tocolor (255, 0, 0, 230), 2)
 					end
 				end
@@ -567,6 +569,7 @@ function resourcemap()
 			setElementFrozen(theVehicle, true)
 		end
 		map()
+		setElementData(localPlayer, "ResourceMap", true)
 	else
 		setCameraTarget(localPlayer)
 		PData["ResourceMap"] = nil
@@ -587,11 +590,11 @@ function resourcemap()
 			setElementFrozen(theVehicle, false)
 		end
 		showCursor(false)
+		setElementData(localPlayer, "ResourceMap", nil)
 	end
 end
 addEvent("ResourceMap", true)
 addEventHandler("ResourceMap", getRootElement(), resourcemap)
-bindKey("F10", "down", resourcemap)
 
 
 
