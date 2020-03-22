@@ -1,9 +1,9 @@
 local screenWidth, screenHeight = guiGetScreenSize()
 local scale = (screenWidth/1920)+(screenHeight/1080)
 local NewScale = ((screenWidth/1920)+(screenHeight/1080))/2
-local GroundMaterial = {}
 local VideoMemory = {["HUD"] = {}}
 local RailRoadsSA = exports["vehicle_node"]:GetRailnodes()
+local PData = {}
 
 local trafficlight = {
 	["0"] = "west",
@@ -11,9 +11,6 @@ local trafficlight = {
 	["2"] = false,
 	["3"] = "north",
 	["4"] = "north"
-}
-local PData = {
-	["changezone"] = {} -- Для разработчика
 }
 
 local DevelopmentZones = {
@@ -218,15 +215,24 @@ function GetCursorPositionOnMap() -- Можно оптимизировать в 
 end
 
 
+function math.round(number, decimals, method)
+    decimals = decimals or 0
+    local factor = 10 ^ decimals
+    if (method == "ceil" or method == "floor") then return math[method](number * factor) / factor
+    else return tonumber(("%."..decimals.."f"):format(number)) end
+end
+
+
 function updateCamera()
 	if(getDevelopmentMode()) then
+		local city = getPlayerCity(localPlayer)
 		for _, thePed in pairs(getElementsByType("ped", getRootElement(), true)) do
 			local path = getElementData(thePed, "path")
 			if(path) then
 				for i, dat in pairs(path) do
 					if(path[i+1]) then
-						local node1 = PathNodes[getPlayerCity(localPlayer)][path[i][1]][path[i][2]]
-						local node2 = PathNodes[getPlayerCity(localPlayer)][path[i+1][1]][path[i+1][2]]
+						local node1 = PathNodes[city][path[i][1]][path[i][2]]
+						local node2 = PathNodes[city][path[i+1][1]][path[i+1][2]]
 						dxDrawLine3D(node1[2], node1[3], node1[4]+1, node2[2], node2[3], node2[4]+1, tocolor (255, 0, 0, 230), 2)
 					end
 				end
@@ -235,8 +241,18 @@ function updateCamera()
 	
 		local px,py,pz = getElementPosition(localPlayer)
 	
-		local material = GetGroundMaterial(px,py,pz,pz-2, getPlayerCity(localPlayer))
-		local out = "Материал: "..material.."\nЗона: "..exports["ps2_weather"]:GetZoneName(px,py,pz, false, getElementData(localPlayer, "City"))
+		local material = false
+		if(PedGrid[city][math.round(px, 0)]) then 
+			if(PedGrid[city][math.round(px, 0)][math.round(py, 0)]) then 
+				material = 4
+			end
+		end
+		if(not material) then
+			local gz = getGroundPosition(px,py,pz)
+			_,_,_,_,_,_,_,_,material = processLineOfSight(px,py,pz,px,py,gz-1, true,false,false,false,false,true,true,true,localPlayer, true)
+		end
+	
+		local out = "Материал: "..material.."\nЗона: "..exports["ps2_weather"]:GetZoneName(px,py,pz, false, city)
 		if(isCursorShowing()) then
 			local x,y,z = getCameraMatrix()
 			local sx,sy, cx,cy,cz = getCursorPosition()
@@ -251,52 +267,44 @@ function updateCamera()
 
 
 	
-	
-		for i, arr in pairs(PData["changezone"]) do
-			
-			local wx,wy,wz = false, false, false
-			if(arr[2]) then
-				wx,wy,wz = arr[2][1], arr[2][2], arr[2][3]
-			else
-				local _, _, worldx, worldy, worldz = getCursorPosition()
-				local px, py, pz = getCameraMatrix()
-				_,wx,wy,wz,_ = processLineOfSight(px, py, pz, worldx, worldy, worldz)
-				wx,wy,wz = math.round(wx, 0), math.round(wy, 0), math.round(wz, 1)
-				
-			end
-			local color = tocolor(50,150,200,80)
-			if(arr[1][4] ~= getZoneName(wx,wy,wz, false)) then
-				color = tocolor(200,50,50,80)
-			end
-	
-			
-			local point = {arr[1][1], wy, math.round(getGroundPosition(arr[1][1], wy, arr[1][3]+3), 1)}
-			local point2 = {wx, arr[1][2], math.round(getGroundPosition(wx, arr[1][2], wz+3), 1)}
-			
-			dxDrawLine3D(arr[1][1], arr[1][2], arr[1][3], point[1], point[2], point[3], color, 25)
-			
-			dxDrawLine3D(point[1], point[2], point[3], wx,wy,wz, color, 25)
-	
-			dxDrawLine3D(wx,wy,wz, point2[1], point2[2], point2[3], color, 25)
-	
-			dxDrawLine3D(point2[1], point2[2], point2[3], arr[1][1], arr[1][2], arr[1][3], color, 25)
-			
-			
-			local nx, ny = ((arr[1][1]-arr[2][1])/2), ((arr[1][2]-arr[2][2])/2)
-			create3dtext('[ '..i..' ] ', arr[1][1]-nx, arr[1][2]-ny, arr[1][3]+2, NewScale*2, 60, tocolor(228, 70, 70, 180), "default-bold")
-	
-		end
-	
 		local x,y,z = getElementPosition(localPlayer)
-		local Zone = exports["ps2_weather"]:GetZoneName(x,y,z, false, getPlayerCity(localPlayer))
+		local Zone = exports["ps2_weather"]:GetZoneName(x,y,z, false, city)
 		
-		if(not DevelopmentZones[getPlayerCity(localPlayer)][Zone]) then
-			DevelopmentZones[getPlayerCity(localPlayer)][Zone] = PathNodes[getPlayerCity(localPlayer)][Zone]
+		
+		
+		if(not DevelopmentZones[city][Zone]) then
+			DevelopmentZones[city][Zone] = true
 		end
-	
-	
-		for zone, arr in pairs(DevelopmentZones[getPlayerCity(localPlayer)]) do
-			for i, arr2 in pairs(arr) do
+		
+		
+				
+		
+		for zone, _ in pairs(DevelopmentZones[city]) do
+			if(not PedNodes[city][zone]) then PedNodes[city][zone] = {} end
+			for i, arr in pairs(PedNodes[city][zone]) do
+				local wx,wy,wz = arr[4], arr[5], arr[6]
+				local color = tocolor(255,255,0,80)
+
+				local point = {arr[1], wy, math.round(getGroundPosition(arr[1], wy, arr[3]+3), 1)}
+				local point2 = {wx, arr[2], math.round(getGroundPosition(wx, arr[2], wz+3), 1)}
+				
+				dxDrawLine3D(arr[1], arr[2], arr[3], point[1], point[2], point[3], color, 25)
+				
+				dxDrawLine3D(point[1], point[2], point[3], wx,wy,wz, color, 25)
+		
+				dxDrawLine3D(wx,wy,wz, point2[1], point2[2], point2[3], color, 25)
+		
+				dxDrawLine3D(point2[1], point2[2], point2[3], arr[1], arr[2], arr[3], color, 25)
+				
+				
+				local nx, ny = (arr[1]-wx), ((arr[2]-wy)/2)
+				create3dtext('[ '..i..' ] ', arr[1]-nx, wy-ny, arr[3]+2, NewScale*2, 60, tocolor(228, 70, 70, 180), "default-bold")
+			end
+		end
+		
+		
+		for zone, _ in pairs(DevelopmentZones[city]) do
+			for i, arr2 in pairs(PathNodes[city][zone]) do
 				local x,y,z = arr2[2], arr2[3], arr2[4]
 				
 				local px,py,pz = getElementPosition(localPlayer)
@@ -317,12 +325,12 @@ function updateCamera()
 						end
 					end
 					
-					if(PathNodes[getPlayerCity(localPlayer)][zone][i+1]) then
+					if(PathNodes[city][zone][i+1]) then
 						table.insert(nextmarkers, {zone, i+1})
 					end
 					
 					for _, arr3 in pairs(nextmarkers) do
-						local dat = PathNodes[getPlayerCity(localPlayer)][arr3[1]][arr3[2]]
+						local dat = PathNodes[city][arr3[1]][arr3[2]]
 						local color = tocolor(50,255,50,150)
 						if(dat[1] == "Closed" or arr2[1] == "Closed") then
 							color = tocolor(255,50,50,150)
@@ -545,9 +553,6 @@ function playerPressedKey(button, press)
 					PData["WaypointBlip"] = createBlip(x*50, y*50, 0, 41, 2, 255,255,255, 0, 65535)
 					local px,py,pz = getElementPosition(localPlayer)
 					triggerServerEvent("GetPathByCoordsNEW", localPlayer, localPlayer, px, py, pz, x*50, y*50, 20)
-					--[[triggerServerEvent("saveserver", localPlayer, localPlayer, 
-					x*50, y*50, 20, 
-					x*50, y*50, 20, "PedPath")--]]
 				end
 			end
 		end
@@ -599,75 +604,6 @@ addEventHandler("ResourceMap", getRootElement(), resourcemap)
 
 
 
-
-
-
-function GetGroundMaterial(x,y,z,gz,city)
-	x, y = math.round(x, 0), math.round(y, 0)
-	local material = false
-	local zone = exports["ps2_weather"]:GetZoneName(x,y,z, true, city)
-	if(GroundMaterial[city]) then
-		if(GroundMaterial[city][zone]) then
-			if(GroundMaterial[city][zone][x]) then
-				if(GroundMaterial[city][zone][x][y]) then
-					material = GroundMaterial[city][zone][x][y]
-				end
-			end
-		end
-	end
-	if(not material) then _,_,_,_,_,_,_,_,material = processLineOfSight(x,y,z,x,y,gz-1, true,false,false,false,false,true,true,true,localPlayer, true) end
-	if(not material) then material = 1337 end
-	return material
-end
-addEvent("GetGroundMaterial", true)
-addEventHandler("GetGroundMaterial", getRootElement(), GetGroundMaterial)
-
-
-
-
-
-function addLabelOnClick(button, state, absoluteX, absoluteY, worldX, worldY, worldZ, clickedElement)
-	if(getDevelopmentMode()) then
-		worldX = math.round(worldX, 0)
-		worldY = math.round(worldY, 0)
-		worldZ = math.round(worldZ, 1)
-		if(button == "left") then
-			if(getKeyState("lctrl")) then
-				if(state == "down") then
-					PData['changezone'][#PData['changezone']+1] = {[1] = {worldX, worldY, worldZ, getZoneName(worldX, worldY, worldZ, false)}}
-				else
-					local zone = getZoneName(worldX, worldY, worldZ, false)
-					if(zone == PData['changezone'][#PData['changezone']][1][4]) then
-						local oldx, oldy, oldz = PData['changezone'][#PData['changezone']][1][1], PData['changezone'][#PData['changezone']][1][2], PData['changezone'][#PData['changezone']][1][3]
-				
-		
-						local out = {oldx, oldy, oldz, worldX, worldY, worldZ}
-						if(out[1] > out[4]) then
-							out = {out[4], out[2], math.round(getGroundPosition(out[4], out[2], out[3]+3), 1), out[1], out[5], math.round(getGroundPosition(out[1], out[5], out[6]+3), 1)}
-						end
-						
-						if(out[2] > out[5]) then
-							out = {out[1], out[5], math.round(getGroundPosition(out[1], out[5], out[3]+3), 1), out[4], out[2], math.round(getGroundPosition(out[4], out[2], out[6]+3), 1)}
-						end
-						
-			
-						PData['changezone'][#PData['changezone']][1] = {out[1], out[2], out[3], zone}
-						PData['changezone'][#PData['changezone']][2] = {out[4], out[5], out[6]}
-						
-		
-						triggerServerEvent("saveserver", localPlayer, localPlayer, 
-						out[1], out[2], out[3], 
-						out[4], out[5], out[6], "PedPath"
-						)
-					else
-						PData['changezone'][#PData['changezone']] = nil
-					end
-				end
-			end
-		end
-	end
-end
-addEventHandler("onClientClick", getRootElement(), addLabelOnClick)
 
 
 
@@ -808,12 +744,6 @@ end
 
 
 
-function math.round(number, decimals, method)
-    decimals = decimals or 0
-    local factor = 10 ^ decimals
-    if (method == "ceil" or method == "floor") then return math[method](number * factor) / factor
-    else return tonumber(("%."..decimals.."f"):format(number)) end
-end
 
 
 

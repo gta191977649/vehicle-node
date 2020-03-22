@@ -5,7 +5,7 @@
 	<script src="VehicleNodeVC.lua" type="shared"/>
 	<script src="VehicleNodeLC.lua" type="shared"/>
 	<script src="RailNode.lua" type="client"/>
-	<script src="PedNode.lua" type="server"/>
+	<script src="PedNode.lua" type="shared"/>
 	<script src="VehicleNode.lua" type="server"/>
 	<script src="client.lua" type="client"/>
 	<export function='GetPedNodes' type="server" />
@@ -13,6 +13,7 @@
 	<export function='GetVehicleNodesClient' type="client" />
 	<export function='GetVehicleNodes' type="server" />
 	<export function='GetVehiclePathGrid' type="server" />
+	<export function='GetPedPathGrid' type="shared" />
 	<export function='LoadZone' type="client" />
 	<export function='GetGroundMaterial' type="client" />
 	<export function='GetCoordsByGPS' type="server" />

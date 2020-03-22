@@ -1,5 +1,5 @@
 -- x,y,z, x2,y2,z2, rz (+ - 180)
-local PedNodes = {
+PedNodes = {
 	["San Andreas"] = {
 	["Ganton"] = {
 		[1] = {2224, -1758, 12.6, 2406, -1755, 12.5, 0}, 
@@ -415,74 +415,40 @@ local PedNodes = {
 	}, 	
 }}
 
-local PedSeat = {
-	["Idlewood"] = {
-		[1432] = {
-			[1] = {2103.9, -1800.5, 14.3, 45}, 
-			[2] = {2101.7, -1798.2, 14.3, 355}, 
-			[3] = {2103.6, -1795.9, 14.3, 60}, 
-			[4] = {2102.1, -1793.1, 14.3, 35}, 
-			[5] = {2102.1, -1820, 14.3, 25}, 
-			[6] = {2103.4, -1817.3, 14.3, 60}, 
-			[7] = {2102, -1814.8, 14.2, 35}, 
-			[8] = {2104, -1812.4, 14.3, 55}, 
-		}, 
-	}, 
-}
-
-function getPointInFrontOfPoint(x, y, z, rZ, dist)
-	local offsetRot = math.rad(rZ)
-	local vx = x + dist * math.cos(offsetRot)
-	local vy = y + dist * math.sin(offsetRot)  
-	return vx, vy, z
-end
-
-local rand = {"seat_talk_02", "seat_talk_01"}
-
---for i,v in pairs(PedSeat) do
---	for i2, v2 in pairs(v) do
---		if(i2 == 1432) then
---			local x,y,z = false
---			for i3, v3 in pairs(v2) do
---				x,y,z = getPointInFrontOfPoint(v3[1], v3[2], v3[3]-0.7, v3[4], 0.9)
---				local ped = createPed(299, x,y,z)
---				setElementCollisionsEnabled(ped, false)
---				setElementData(ped, "dialogrz", v3[4]+100)
---				setElementData(ped, "anim", toJSON({"misc", rand[math.random(#rand)], -1, true, true}))
---				
---				x,y,z = getPointInFrontOfPoint(v3[1], v3[2], v3[3]-0.7, v3[4]+125, 0.9)
---				local ped = createPed(299, x,y,z)
---				setElementCollisionsEnabled(ped, false)
---				setElementData(ped, "dialogrz", v3[4]+200)
---				setElementData(ped, "anim", toJSON({"misc", rand[math.random(#rand)], -1, true, true}))
---				
---				
---				x,y,z = getPointInFrontOfPoint(v3[1], v3[2], v3[3]-0.7, v3[4]+245, 0.9)
---				local ped = createPed(299, x,y,z)
---				setElementCollisionsEnabled(ped, false)
---				setElementData(ped, "dialogrz", v3[4]+330)
---				setElementData(ped, "anim", toJSON({"misc", rand[math.random(#rand)], -1, true, true}))
---				
---			end
---		end
---	end
---end
 
 
-function ZonesGroundPosition(city, zone)
-	if(PedNodes[city]) then
-		if(PedNodes[city][zone]) then
-			triggerClientEvent(source, "InfoPathPed", source, city, zone, toJSON(PedNodes[city][zone]))
+
+
+PedGrid = {}
+
+for city, dat in pairs(PedNodes) do
+	PedGrid[city] = {}
+	for district, dat2 in pairs(dat) do
+		for id, dat3 in pairs(dat2) do
+			for slotx = dat3[1], dat3[4] do
+				for sloty = dat3[2], dat3[5] do
+					if(not PedGrid[city][slotx]) then PedGrid[city][slotx] = {} end
+					if(not PedGrid[city][slotx][sloty]) then PedGrid[city][slotx][sloty] = {} end
+					PedGrid[city][slotx][sloty] = {slotx, sloty, dat3[3], dat3[7]} -- x,y,z, rz 
+				end
+			end
 		end
 	end
 end
-addEvent("ZonesGroundPosition", true)
-addEventHandler("ZonesGroundPosition", root, ZonesGroundPosition)
+
+
 
 
 function GetPedNodes()
 	return PedNodes
 end
+
+
+
+function GetPedPathGrid()
+	return PedGrid
+end
+
 
 
 
