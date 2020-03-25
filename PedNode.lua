@@ -1,5 +1,7 @@
 -- x,y,z, x2,y2,z2, rz (+ - 180)
 PedNodes = {
+	["Liberty City"] = {},
+	["Vice City"] = {}, 
 	["San Andreas"] = {
 	["Ganton"] = {
 		[1] = {2224, -1758, 12.6, 2406, -1755, 12.5, 0}, 
